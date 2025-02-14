@@ -1,0 +1,141 @@
+{
+  "id": "Umfragebogen mit Gewinnspiel",
+  "markers": {
+    "0": {
+      "x": 10.0,
+      "y": 10.0
+    },
+    "1": {
+      "x": 128.0,
+      "y": 151.7
+    }
+  },
+  "fragen": [
+    {
+      "wert": "Bitte kreuzen Sie Ihr Alter an",
+      "type": "single-choice",
+      "checkboxes": [
+        {
+          "wert": "unter 20 Jahre",
+          "x": 10,
+          "y": 35.5
+        },
+        {
+          "wert": "20 - 40 Jahre",
+          "x": 63.1,
+          "y": 35.5
+        },
+        {
+          "wert": "40 - 60 Jahre",
+          "x": 10,
+          "y": 42.5
+        },
+        {
+          "wert": "über 60 Jahre",
+          "x": 63.1,
+          "y": 42.5
+        }
+      ],
+      "checkboxsize": 5.2
+    },
+    {
+      "wert": "Bitte tragen Sie ihre Postleitzahl ein",
+      "type": "text",
+      "x": 100.9,
+      "y": 46.8,
+      "w": 37.2,
+      "h": 14.7,
+      "regex": "^9[01]\\d{3}$"
+    },
+    {
+      "wert": "Waren Sie schon einmal bei den Klosterhofspielen Langenzenn?",
+      "type": "single-choice",
+      "checkboxes": [
+        {
+          "wert": "Ja",
+          "x": 10,
+          "y": 78.2
+        },
+        {
+          "wert": "Nein",
+          "x": 32.8,
+          "y": 78.2
+        }
+      ],
+      "checkboxsize": 5.2
+    },
+    {
+      "wert": "Sind Sie mit einem Mitglied der Produktion/des Vereins verwandt oder gut befreundet?",
+      "type": "single-choice",
+      "checkboxes": [
+        {
+          "wert": "Ja",
+          "x": 10,
+          "y": 102.6
+        },
+        {
+          "wert": "Nein",
+          "x": 32.8,
+          "y": 102.6
+        }
+      ],
+      "checkboxsize": 5.2
+    },
+    {
+      "wert": "Woher haben Sie von unserer Produktion erfahren (Mehrfachauswahl möglich)?",
+      "type": "multiple-choice",
+      "checkboxes": [
+        {
+          "wert": "Zeitung",
+          "x": 10,
+          "y": 127
+        },
+        {
+          "wert": "Flyer",
+          "x": 10,
+          "y": 133.9
+        },
+        {
+          "wert": "Facebook",
+          "x": 10,
+          "y": 140.8
+        },
+        {
+          "wert": "Freunde",
+          "x": 10,
+          "y": 147.2
+        },
+        {
+          "wert": "Plakate",
+          "x": 51.9,
+          "y": 127
+        },
+        {
+          "wert": "Instagram",
+          "x": 51.9,
+          "y": 133.9
+        },
+        {
+          "wert": "Radio",
+          "x": 51.9,
+          "y": 140.8
+        },
+        {
+          "wert": "Sonstiges",
+          "x": 51.9,
+          "y": 147.2
+        }
+      ],
+      "checkboxsize": 5.2
+    },
+    {
+      "wert": "Woher haben Sie von unserer Produktion erfahren? Sonstiges",
+      "type": "text",
+      "x": 57.5,
+      "y": 144.1,
+      "w": 69.9,
+      "h": 9.6,
+      "regex": ".*"
+    }
+  ]
+}
