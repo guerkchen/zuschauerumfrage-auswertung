@@ -47,11 +47,11 @@ def ocr(bw_img):
     else:
         raise Exception("Texterkennung nicht möglich")
 
-def handle_text(gray_img, orig_img, frage, offset_x, offset_y, scale_factor):
-    x1 = math.floor(offset_x + frage["x"] * scale_factor)
-    x2 = math.floor(offset_x + (frage["x"] + frage["w"]) * scale_factor)
-    y1 = math.floor(offset_y + frage["y"] * scale_factor)
-    y2 = math.floor(offset_y + (frage["y"] + frage["h"]) * scale_factor)
+def handle_text(gray_img, orig_img, frage):
+    x1 = math.floor(frage["x"])
+    x2 = math.floor(frage["x"] + frage["w"])
+    y1 = math.floor(frage["y"])
+    y2 = math.floor(frage["y"] + frage["h"])
     cv2.rectangle(gray_img, (x1, y1), (x2, y2), 0, 2)
     textfeld = gray_img[y1:y2, x1:x2]
     orig_img = cv2.rectangle(orig_img, (x1, y1), (x2, y2), (255, 0, 0), 2)

@@ -175,3 +175,4 @@ debug/
 input/
 output/
 quality_assurance.py
+tmp/

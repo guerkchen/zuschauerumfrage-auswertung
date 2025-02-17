@@ -12,41 +12,120 @@ def find_aruco(gray_img):
     corners, ids, _ = detector.detectMarkers(gray_img)
 
     if ids is None or not 0 in ids or not 1 in ids:
-        print(f"Aruco Marker nicht gefunden")
+        raise Exception(f"Aruco Marker nicht gefunden {ids}")
 
     return corners, ids
 
-def rotate_img(gray_img, orig_img):
-    corners, _ = find_aruco(gray_img)
+def remove_transparency(png_image):
+    if png_image.shape[2] == 4:  # Falls Alpha-Kanal existiert
+        alpha = png_image[:, :, 3]  # Alpha-Kanal extrahieren
+        gray = cv2.cvtColor(png_image[:, :, :3], cv2.COLOR_BGR2GRAY)
+        gray[alpha == 0] = 255  # Transparente Bereiche weiß setzen
+    else:
+        gray = cv2.cvtColor(png_image, cv2.COLOR_BGR2GRAY)
+    return gray
 
-    # find rotation according to markers
-    # all markers should be orientated to the right way, so the edges of the markers are used to reorientated the image
-    angles_rad = []
-    for corner in corners:
-        idx = corner[0]
-        #idx = corners[np.where(ids == i)[0][0]][0]
-        angles_rad.append(math.atan2(idx[1][1] - idx[0][1], idx[1][0] - idx[0][0]))
-        angles_rad.append(math.atan2(idx[1][0] - idx[2][0], idx[2][1] - idx[1][1]))
-        angles_rad.append(math.atan2(idx[2][1] - idx[3][1], idx[2][0] - idx[3][0]))
-        angles_rad.append(math.atan2(idx[0][0] - idx[3][0], idx[3][1] - idx[0][1]))
+def find_png(gray_img, png_path):
+    # read png
+    template = cv2.imread(png_path, cv2.IMREAD_UNCHANGED)
+    
+    # Transparenz entfernen und in Graustufen umwandeln
+    template_gray = remove_transparency(template)
+    
+    # SIFT-Feature-Extraktion
+    sift = cv2.SIFT_create()
+    kp_doc, des_doc = sift.detectAndCompute(gray_img, None)
+    kp_temp, des_temp = sift.detectAndCompute(template_gray, None)
+    
+    # Matcher (FLANN-basierter Matcher für schnellere Suche)
+    index_params = dict(algorithm=1, trees=5)  # FLANN-Parameter
+    search_params = dict(checks=50)  # Anzahl der Prüfungen
+    flann = cv2.FlannBasedMatcher(index_params, search_params)
+    
+    # Features vergleichen
+    matches = flann.knnMatch(des_temp, des_doc, k=2)
+    
+    # Gute Übereinstimmungen nach Lowe’s Ratio-Test filtern
+    good_matches = [m for m, n in matches if m.distance < 0.75 * n.distance]
+    
+    if len(good_matches) > 4:  # Mindestens 4 Punkte für Homographie notwendig
+        # Extrahierte Punkte für Homographie-Matrix
+        src_pts = np.float32([kp_temp[m.queryIdx].pt for m in good_matches]).reshape(-1, 1, 2)
+        dst_pts = np.float32([kp_doc[m.trainIdx].pt for m in good_matches]).reshape(-1, 1, 2)
 
-    # rotate image
-    (old_h, old_w) = gray_img.shape[:2]
-    center = (old_w // 2, old_h // 2)  # Calculate center of the image
-    # Compute mean using vector approach
-    angle_rad = np.arctan2(np.mean(np.sin(angles_rad)), np.mean(np.cos(angles_rad)))
-    new_w = int(abs(old_w * math.cos(angle_rad)) + abs(old_h * math.sin(angle_rad)))
-    new_h = int(abs(old_w * math.sin(angle_rad)) + abs(old_h * math.cos(angle_rad)))
-    rotation_matrix = cv2.getRotationMatrix2D(center, math.degrees(angle_rad), 1.0)
-    # Update der Transformationsmatrix für die neue Bildgröße
-    rotation_matrix[0, 2] += (new_w - old_w) / 2
-    rotation_matrix[1, 2] += (new_h - old_h) / 2
+        # Homographie berechnen
+        M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 5.0)
+        
+        # Eckpunkte des Musters transformieren
+        h, w = template_gray.shape
+        pts = np.float32([[0, 0], [w, 0], [w, h], [0, h]]).reshape(-1, 1, 2)
+        dst = cv2.perspectiveTransform(pts, M)
 
-    bw_img_rotated = cv2.warpAffine(gray_img, rotation_matrix, (new_w, new_h))
-    orig_img_rotated = cv2.warpAffine(orig_img, rotation_matrix, (new_w, new_h))
-    return bw_img_rotated, orig_img_rotated
+        # Muster zurückgeben
+        return dst[:, 0, :]
+    else:
+        raise Exception(f"Kein passendes Muster {png_path} gefunden.")
+    
+def compute_center(x, y, w, h):
+    center_x = x + w / 2
+    center_y = y + h / 2
+    return [center_x, center_y]
+    
+def get_affine_transform_matrix(gray_img, data, orig_img):
+    # SOLL
+    markers = data["markers"]
+    png = data["pngs"][0]
 
-def get_scale_and_offset(gray_img, data):
+    pts_soll = np.array([
+        compute_center(png["x"], png["y"], png["w"], png["h"]), # Png
+        compute_center(markers["0"]["x"], markers["0"]["y"],markers["0"]["w"],markers["0"]["h"]), # aruco Marker 0
+        compute_center(markers["1"]["x"], markers["1"]["y"],markers["1"]["w"],markers["1"]["h"]) # aruco Marker 1
+    ], dtype=np.float32)
+
+    # IST
+    aruco_corners, aruco_ids = find_aruco(gray_img)
+    png_corners = find_png(gray_img, png["filename"])
+
+    cv2.polylines(orig_img, [np.int32(png_corners)], True, (255, 0, 0), 3)
+    cv2.polylines(orig_img, [np.int32(aruco_corners[0])], True, (255, 0, 0), 3)
+    cv2.polylines(orig_img, [np.int32(aruco_corners[1])], True, (255, 0, 0), 3)
+
+    center_png = np.mean(png_corners, axis=0)
+    center_aruco_0 = np.mean(aruco_corners[np.where(aruco_ids == 0)[0][0]][0], axis=0)
+    center_aruco_1 = np.mean(aruco_corners[np.where(aruco_ids == 1)[0][0]][0], axis=0)
+
+    cv2.circle(orig_img, center_png.astype(int), 5, (255, 255, 0), -1)
+    cv2.circle(orig_img, center_aruco_0.astype(int), 5, (255, 255, 0), -1)
+    cv2.circle(orig_img, center_aruco_1.astype(int), 5, (255, 255, 0), -1)
+
+    pts_ist = np.array([
+        center_png, # Png
+        center_aruco_0, # aruco Marker 0
+        center_aruco_1 # aruco Marker 1
+    ], dtype=np.float32)
+
+    # Matrix berechnen
+    #matrix = cv2.getAffineTransform(pts_soll, pts_ist)
+    matrix = cv2.getAffineTransform(pts_ist, pts_soll)
+    return matrix, orig_img
+
+def transform_images(gray_img, orig_img, matrix):
+    # Neue Größe bestimmen
+    h, w = gray_img.shape[:2] # ist fuer orig_img identisch
+    corners = np.array([[0, 0], [w, 0], [0, h], [w, h]], dtype=np.float32)
+    transformed_corners = cv2.transform(np.array([corners]), matrix)[0]
+    min_x = np.min(transformed_corners[:, 0])
+    max_x = np.max(transformed_corners[:, 0])
+    min_y = np.min(transformed_corners[:, 1])
+    max_y = np.max(transformed_corners[:, 1])
+    new_width = int(max_x - min_x)
+    new_height = int(max_y - min_y)
+
+    # Transformation anwenden
+    gray_img = cv2.warpAffine(gray_img, matrix, (new_width, new_height))
+    orig_img = cv2.warpAffine(orig_img, matrix, (new_width, new_height))
+
+    return gray_img, orig_img
     # compute scale factor for json values
     corners, ids = find_aruco(gray_img)
 
