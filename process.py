@@ -22,14 +22,15 @@ def handle_image(img_path, json_path):
     for frage in data["fragen"]:
         try:
             if frage["type"] == "single-choice":
-                frage_result, orig_img = handle_single_choice(gray_img, orig_img, frage)
+                frage_result, orig_img = handle_single_choice(gray_img, orig_img, frage, data)
                 result.append(frage_result)
             elif frage["type"] == "multiple-choice":
-                frage_result, orig_img = handle_multiple_choice(gray_img, orig_img, frage)
+                frage_result, orig_img = handle_multiple_choice(gray_img, orig_img, frage, data)
                 result.append(frage_result)
             elif frage["type"] == "text":
-                frage_result, orig_img = handle_text(gray_img, orig_img, frage)
-                result.append(frage_result)
+                #frage_result, orig_img = handle_text(gray_img, orig_img, frage)
+                #result.append(frage_result)
+                print("skip text")
             else:
                 print("type " + frage["type"] + " not implemented yet")
         except Exception as e:

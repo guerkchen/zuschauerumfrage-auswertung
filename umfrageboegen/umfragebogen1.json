@@ -49,7 +49,7 @@
           "y": 502.3
         }
       ],
-      "checkboxsize": 62
+      "checkboxsize": 64
     },
     {
       "wert": "Bitte tragen Sie ihre Postleitzahl ein",
@@ -75,7 +75,7 @@
           "y": 923.9
         }
       ],
-      "checkboxsize": 62
+      "checkboxsize": 64
     },
     {
       "wert": "Sind Sie mit einem Mitglied der Produktion/des Vereins verwandt oder gut befreundet?",
@@ -92,7 +92,7 @@
           "y": 1211.6
         }
       ],
-      "checkboxsize": 62
+      "checkboxsize": 64
     },
     {
       "wert": "Woher haben Sie von unserer Produktion erfahren (Mehrfachauswahl möglich)?",
@@ -139,7 +139,7 @@
           "y": 1738.8
         }
       ],
-      "checkboxsize": 62
+      "checkboxsize": 64
     },
     {
       "wert": "Woher haben Sie von unserer Produktion erfahren? Sonstiges",
