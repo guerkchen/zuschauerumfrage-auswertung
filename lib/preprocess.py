@@ -94,9 +94,9 @@ def get_affine_transform_matrix(gray_img, data, orig_img):
     center_aruco_0 = np.mean(aruco_corners[np.where(aruco_ids == 0)[0][0]][0], axis=0)
     center_aruco_1 = np.mean(aruco_corners[np.where(aruco_ids == 1)[0][0]][0], axis=0)
 
-    cv2.circle(orig_img, center_png.astype(int), 5, (255, 255, 0), -1)
-    cv2.circle(orig_img, center_aruco_0.astype(int), 5, (255, 255, 0), -1)
-    cv2.circle(orig_img, center_aruco_1.astype(int), 5, (255, 255, 0), -1)
+    cv2.circle(orig_img, center_png.astype(int), 2, (255, 255, 0), -1)
+    cv2.circle(orig_img, center_aruco_0.astype(int), 2, (255, 255, 0), -1)
+    cv2.circle(orig_img, center_aruco_1.astype(int), 2, (255, 255, 0), -1)
 
     pts_ist = np.array([
         center_png, # Png
