@@ -42,7 +42,7 @@ def handle_folder(input_path, output_path):
     jpg_files = glob.glob(os.path.join(input_path, "*.jpg"))
     result = {}
     for img_path in jpg_files:
-        result_img = handle_image(img_path, "umfrageboegen/umfragebogen1.json")
+        result_img = handle_image(img_path, "umfrageboegen/umfragebogen2.json")
         result[img_path] = result_img
 
     # JSON in eine Datei schreiben

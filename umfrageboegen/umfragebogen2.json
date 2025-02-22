@@ -1,0 +1,162 @@
+{
+  "id": "Umfragebogen ohne Gewinnspiel",
+  "markers": {
+    "0": {
+      "x": 1074.3,
+      "y": 1581.8,
+      "w": 83.4,
+      "h": 83.4
+    },
+    "1": {
+      "x": 82.5,
+      "y": 1581.8,
+      "w": 83.8,
+      "h": 83.2
+    }
+  },
+  "pngs": [
+    {
+      "filename": "Fenster.png",
+      "x": 862.1,
+      "y": 83.4,
+      "w": 295.5,
+      "h": 266.2
+    }
+  ],
+  "fragen": [
+    {
+      "wert": "Bitte kreuzen Sie Ihr Alter an",
+      "type": "single-choice",
+      "checkboxes": [
+        {
+          "wert": "unter 20 Jahre",
+          "x": 81.9,
+          "y": 378.8
+        },
+        {
+          "wert": "20 - 40 Jahre",
+          "x": 527.1,
+          "y": 379
+        },
+        {
+          "wert": "40 - 60 Jahre",
+          "x": 82.1,
+          "y": 440.9
+        },
+        {
+          "wert": "über 60 Jahre",
+          "x": 526.9,
+          "y": 441.4
+        }
+      ],
+      "checkboxsize": 43.5
+    },
+    {
+      "wert": "Bitte tragen Sie ihre Postleitzahl ein",
+      "type": "text",
+      "x": 837.7,
+      "y": 476.9,
+      "w": 400,
+      "h": 131,
+      "regex": "^9[01]\\d{3}$"
+    },
+    {
+      "wert": "Waren Sie schon einmal bei den Klosterhofspielen Langenzenn?",
+      "type": "single-choice",
+      "checkboxes": [
+        {
+          "wert": "Ja",
+          "x": 81.7,
+          "y": 739.2
+        },
+        {
+          "wert": "Nein",
+          "x": 272.9,
+          "y": 739.6
+        }
+      ],
+      "checkboxsize": 43.5
+    },
+    {
+      "wert": "Sind Sie mit einem Mitglied der Produktion/des Vereins verwandt oder gut befreundet?",
+      "type": "single-choice",
+      "checkboxes": [
+        {
+          "wert": "Ja",
+          "x": 81.9,
+          "y": 942.2
+        },
+        {
+          "wert": "Nein",
+          "x": 273.1,
+          "y": 942.3
+        }
+      ],
+      "checkboxsize": 43.5
+    },
+    {
+      "wert": "Woher haben Sie von unserer Produktion erfahren (Mehrfachauswahl möglich)?",
+      "type": "multiple-choice",
+      "checkboxes": [
+        {
+          "wert": "Zeitung",
+          "x": 82,
+          "y": 1149
+        },
+        {
+          "wert": "Flyer",
+          "x": 82,
+          "y": 1218.4
+        },
+        {
+          "wert": "Facebook",
+          "x": 82.1,
+          "y": 1287.9
+        },
+        {
+          "wert": "Freunde",
+          "x": 82.4,
+          "y": 1352.6
+        },
+        {
+          "wert": "Plakate",
+          "x": 432.8,
+          "y": 1149
+        },
+        {
+          "wert": "Instagram",
+          "x": 432.8,
+          "y": 1214.9
+        },
+        {
+          "wert": "Radio",
+          "x": 432.7,
+          "y": 1284.6
+        },
+        {
+          "wert": "Sonstiges",
+          "x": 432.7,
+          "y": 1349.5
+        }
+      ],
+      "checkboxsize": 43.5
+    },
+    {
+      "wert": "Woher haben Sie von unserer Produktion erfahren? Sonstiges",
+      "type": "text",
+      "x": 492.4,
+      "y": 1262.6,
+      "w": 664.8,
+      "h": 168.7,
+      "regex": ".*",
+      "mask": [
+        {
+          "x": 492.4,
+          "y": 1262.6,
+          "w": 136,
+          "h": 55
+        }
+      ]
+    }
+  ]
+}

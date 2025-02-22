@@ -5,7 +5,7 @@ import string
 from datetime import datetime
 
 # PDF-Datei einlesen
-pdf_path = "input/test02.pdf"  # Pfad zur PDF-Datei
+pdf_path = "input/test03.pdf"  # Pfad zur PDF-Datei
 output_folder = "input"  # Ordner für die JPGs
 
 # Sicherstellen, dass der Ausgabeordner existiert
