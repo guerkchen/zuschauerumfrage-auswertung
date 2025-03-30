@@ -4,23 +4,12 @@ import numpy as np
 
 def find_circle(img, diameter):
     radius = diameter / 2
-    h, w = img.shape[:2] # ist fuer orig_img identisch
-    if math.ceil(diameter) > h or math.ceil(diameter) > w:
-        raise Exception("Durchmesser ist groeser als Hoehe oder Weite des Bildes")
-    
-    for x_center in range(math.floor(radius), w - math.ceil(radius)):
-        for y_center in range(math.floor(radius), h - math.ceil(radius)):
-            notBlack = 0
-            for degree in range(0, 359):
-                theta = math.radians(degree)
-                x = round(x_center + radius * math.cos(theta))
-                y = round(y_center + radius * math.sin(theta))
-                if img[y, x] != 0:
-                    notBlack += 1
-
-            if notBlack < 10:
-                return x_center, y_center
-    
+    circles = cv2.HoughCircles(img, cv2.HOUGH_GRADIENT, dp=5, minDist=radius*2,
+                               param1=50, param2=15, minRadius=int(radius*0.8), maxRadius=int(radius*1.2))
+    if circles is not None:
+        circles = np.round(circles[0, :]).astype("int")
+        x, y, _ = circles[0]
+        return x, y
     raise Exception("Kreis nicht gefunden")
 
 def get_black_ratio_in_circle(img, x_center, y_center, radius):
@@ -42,6 +31,7 @@ def get_black_ratio_in_circle(img, x_center, y_center, radius):
 def handle_multiple_choice(gray_img, orig_img, frage):
     result = {
         "frage": frage["wert"],
+        "type": "multiple-choice",
         "antwort": []
     }
 
@@ -55,16 +45,12 @@ def handle_multiple_choice(gray_img, orig_img, frage):
         yu = math.floor(checkbox["y"] + round(outer_diameter) + offset) # y unten
         checkbox_part = gray_img[yo:yu, xl:xr]
        
-        _, bw_img = cv2.threshold(checkbox_part, 200, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+        _, bw_img = cv2.threshold(checkbox_part, 220, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         x_center, y_center = find_circle(bw_img, outer_diameter)
 
         inner_radius = math.floor((outer_diameter - (outer_diameter / 10)) / 2)
         black_pixel_ratio = get_black_ratio_in_circle(bw_img, x_center, y_center, inner_radius)
-        if black_pixel_ratio > 0.4:
-            orig_img = cv2.circle(orig_img, (x_center + xl, y_center + yo), inner_radius, (255, 0, 0), 2)
-            result["antwort"].append({"wert": checkbox["wert"], "checked": True})
-            print("Checkbox \"" + checkbox["wert"] + "\" hat einen sehr hohen Schwarzanteil")
-        elif black_pixel_ratio > 0.1:
+        if black_pixel_ratio > 0.1:
             # checked
             result["antwort"].append({"wert": checkbox["wert"], "checked": True})
             orig_img = cv2.circle(orig_img, (x_center + xl, y_center + yo), inner_radius, (0, 255, 0), 2)
@@ -82,5 +68,7 @@ def handle_single_choice(bw_img, orig_img, frage):
     count_true = sum(1 for checkbox in result["antwort"] if checkbox["checked"])
     if count_true != 1:
         raise Exception(f"Falsche Anzahl von Kreuzen: {count_true}")
+    
+    result["type"] = "single-choice"
     
     return result, orig_img

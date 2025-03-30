@@ -25,7 +25,7 @@
   ],
   "fragen": [
     {
-      "wert": "Bitte kreuzen Sie Ihr Alter an",
+      "wert": "Altersgruppe",
       "type": "single-choice",
       "checkboxes": [
         {
@@ -44,7 +44,7 @@
           "y": 440.9
         },
         {
-          "wert": "über 60 Jahre",
+          "wert": "ueber 60 Jahre",
           "x": 526.9,
           "y": 441.4
         }
@@ -52,25 +52,25 @@
       "checkboxsize": 43.5
     },
     {
-      "wert": "Bitte tragen Sie ihre Postleitzahl ein",
+      "wert": "Postleitzahl",
       "type": "text",
       "x": 837.7,
       "y": 476.9,
       "w": 400,
       "h": 131,
-      "regex": "^9[01]\\d{3}$"
+      "regex": "^(9[01]\\d{3})?$"
     },
     {
-      "wert": "Waren Sie schon einmal bei den Klosterhofspielen Langenzenn?",
+      "wert": "Wiederholungskunde",
       "type": "single-choice",
       "checkboxes": [
         {
-          "wert": "Ja",
+          "wert": "True",
           "x": 81.7,
           "y": 739.2
         },
         {
-          "wert": "Nein",
+          "wert": "False",
           "x": 272.9,
           "y": 739.6
         }
@@ -78,16 +78,16 @@
       "checkboxsize": 43.5
     },
     {
-      "wert": "Sind Sie mit einem Mitglied der Produktion/des Vereins verwandt oder gut befreundet?",
+      "wert": "Verwandter",
       "type": "single-choice",
       "checkboxes": [
         {
-          "wert": "Ja",
+          "wert": "True",
           "x": 81.9,
           "y": 942.2
         },
         {
-          "wert": "Nein",
+          "wert": "False",
           "x": 273.1,
           "y": 942.3
         }
@@ -95,7 +95,7 @@
       "checkboxsize": 43.5
     },
     {
-      "wert": "Woher haben Sie von unserer Produktion erfahren (Mehrfachauswahl möglich)?",
+      "wert": "Werbung",
       "type": "multiple-choice",
       "checkboxes": [
         {
@@ -132,17 +132,12 @@
           "wert": "Radio",
           "x": 432.7,
           "y": 1284.6
-        },
-        {
-          "wert": "Sonstiges",
-          "x": 432.7,
-          "y": 1349.5
         }
       ],
       "checkboxsize": 43.5
     },
     {
-      "wert": "Woher haben Sie von unserer Produktion erfahren? Sonstiges",
+      "wert": "Werbung_Sonstiges",
       "type": "text",
       "x": 492.4,
       "y": 1262.6,
